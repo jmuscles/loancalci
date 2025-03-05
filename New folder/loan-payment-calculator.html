@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dual Loan Calculators</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+
+
+<script>
+function calculateLoan() {
+  var loanAmount = parseFloat(document.getElementById('loanAmount').value);
+  var annualInterestRate = parseFloat(document.getElementById('annualInterestRate').value);
+  var loanYears = parseInt(document.getElementById('loanYears').value, 10) || 0;
+  var loanMonths = parseInt(document.getElementById('loanMonths').value, 10) || 0;
+  var loanDays = parseInt(document.getElementById('loanDays').value, 10) || 0;
+
+  if(isNaN(loanAmount)) {
+    alert("Please enter valid numbers in all fields.");
+    return;
+  }
+  if(isNaN(annualInterestRate)){
+	annualInterestRate=0;
+  }
+
+  var totalLoanDays = (loanYears * 365) + (loanMonths * 30) + loanDays;
+  var monthlyInterestRate = (annualInterestRate / 100) / 12;
+  var numberOfPayments = totalLoanDays / 30; // Approximation to monthly payments
+  var monthlyPayment = loanAmount * monthlyInterestRate / (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
+  var totalPayment = monthlyPayment * numberOfPayments;
+  var totalInterest = totalPayment - loanAmount;
+
+  document.getElementById('monthlyPayment').innerText = monthlyPayment.toFixed(2);
+  document.getElementById('totalPayment').innerText = totalPayment.toFixed(2);
+  document.getElementById('totalInterest').innerText = totalInterest.toFixed(2);
+}
+</script>
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <h2 class="mb-4">Loan Payment Calculator</h2>
+
+      <div class="mb-3">
+        <label for="loanAmount" class="form-label">Loan Amount ($):</label>
+        <input type="number" class="form-control" id="loanAmount" placeholder="Enter loan amount" value="10000">
+      </div>
+
+      <div class="mb-3">
+        <label for="annualInterestRate" class="form-label">Annual Interest Rate (%):</label>
+        <input type="number" class="form-control" id="annualInterestRate" placeholder="Enter interest rate" value="5">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Loan Term:</label>
+        <div class="input-group">
+          <input type="number" class="form-control" id="loanYears" placeholder="Years" value="30">
+          <span class="input-group-text">Years</span>
+          <input type="number" class="form-control" id="loanMonths" placeholder="Months" value="0">
+          <span class="input-group-text">Months</span>
+          <input type="number" class="form-control" id="loanDays" placeholder="Days" value="0">
+          <span class="input-group-text">Days</span>
+        </div>
+      </div>
+	  
+      <button onclick="calculateLoan()" class="btn btn-primary mb-3">Calculate</button>
+
+      <div class="results">
+        <p>Monthly Payment: <span id="monthlyPayment">0</span></p>
+        <p>Total Payment: <span id="totalPayment">0</span></p>
+        <p>Total Interest: <span id="totalInterest">0</span></p>
+      </div>
+
+      <button onclick="resetCalculator()" class="btn btn-secondary">Reset All</button>
+    </div>
+  </div>
+</div>

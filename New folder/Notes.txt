@@ -1,0 +1,43 @@
+1. add astra site
+2. Add a plugin - "Child Theme Configurator"
+3. under tools click on child theme and create child theme for astra
+4. open the cyberduck. Ftp and go to wp-content/themes/astra-child and create a folder css
+5. copy the bootstrap.min.css fil in to the css folder
+6. After uploading the Bootstrap CSS file, update the child theme’s functions.php file:
+function my_theme_enqueue_styles() {
+    wp_enqueue_style( 'bootstrap-css', get_stylesheet_directory_uri() . '/css/bootstrap.min.css' );
+}
+add_action( 'wp_enqueue_scripts', 'my_theme_enqueue_styles' );
+
+7. create pages
+	1. Finance calulators
+	2. Blogs
+	3. Contact us
+
+8. open the Finance calulators - and add custom html and copy the contents from "finance-calculator-page-html" file
+9. 
+
+
+Recommended Plugins
+1. Contact Form Plugin (e.g., WPForms)
+Why: To create a contact form on your "Contact Us" page.
+Installation: Search for "WPForms" and install it.
+2. SEO Plugin (e.g., Yoast SEO)
+Why: To optimize your site for search engines, improve rankings, and manage SEO titles and meta descriptions.
+Installation: Search for "Yoast SEO" and install it.
+3. Security Plugin (e.g., Wordfence Security)
+Why: To secure your site from hacks and malware.
+Installation: Search for "Wordfence Security" and install it.
+4. Caching Plugin (e.g., WP Super Cache)
+Why: To improve your site’s loading speed by caching pages and posts.
+Installation: Search for "WP Super Cache" and install it.
+5. Google Analytics Plugin (e.g., MonsterInsights)
+Why: To connect your site with Google Analytics and monitor traffic and user behavior.
+Installation: Search for "MonsterInsights" and install it.
+Setting Up Each Plugin
+For WPForms: Create a new form with the fields you want (e.g., Name, Email, Message) and embed it on your "Contact Us" page using the provided shortcode.
+For Yoast SEO: Go through the configuration wizard to set up your site's SEO basics. Then, use the Yoast SEO meta box in each page and post editor to optimize your content.
+For Wordfence: Activate and go through the setup process, adjusting security settings as needed.
+For WP Super Cache: Activate the plugin and visit the settings page to turn on caching.
+For MonsterInsights: Connect your site with Google Analytics by following the setup wizard and authenticate with your Google account.
+

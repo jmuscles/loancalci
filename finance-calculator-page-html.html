@@ -1,0 +1,431 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<div class="container mt-3">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" onclick="openCalculator(event, 'loanPaymentCalculator')">Loan Payment Calculator</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" onclick="openCalculator(event, 'loanTermCalculator')">Loan Term Calculator</a>
+    </li>
+	<li class="nav-item">
+      <a class="nav-link" onclick="openCalculator(event, 'simpleInterestCalculator')">Simple Interest Calculator</a>
+    </li>
+
+	<!--
+    <li class="nav-item">
+      <a class="nav-link" onclick="openCalculator(event, 'investmentCalculator')">Investment Calculator</a>
+    </li>
+	-->
+  </ul>
+	<script>
+		function calculateLoanAmount(purchaseAmountId, downPaymentPercentageId, loanAmountInputId, resultPurchaseAmountId, resultDownPaymentAmountId) {
+			var purchaseAmount = parseFloat(document.getElementById(purchaseAmountId).value);
+			var downPaymentPercentage = parseFloat(document.getElementById(downPaymentPercentageId).value);
+
+			if (isNaN(purchaseAmount) || isNaN(downPaymentPercentage)) {
+			  alert("Please enter valid numbers for purchase amount and down payment percentage.");
+			  return;
+			}
+
+			var downPaymentAmount = (downPaymentPercentage / 100) * purchaseAmount;
+			var loanAmount = purchaseAmount - downPaymentAmount;
+
+			if(resultPurchaseAmountId){
+				document.getElementById(resultPurchaseAmountId).innerText = purchaseAmount.toFixed(2);
+			}
+			if(resultDownPaymentAmountId){
+				document.getElementById(resultDownPaymentAmountId).innerText = downPaymentAmount.toFixed(2);
+			}
+
+			document.getElementById(loanAmountInputId).value = loanAmount.toFixed(2);
+		}
+	</script>
+	
+
+
+  <!-- Start loanPaymentCalculator -->	  
+  <div id="loanPaymentCalculator" class="tabcontent mt-3">
+	<script>
+	
+	function calculateLoanPayment() {
+	
+	  var loanAmount = parseFloat(document.getElementById('loanPaymentCalculator_loanAmount').value);
+	  var annualInterestRate = parseFloat(document.getElementById('loanPaymentCalculator_annualInterestRate').value);
+	  var loanYears = parseInt(document.getElementById('loanPaymentCalculator_loanYears').value, 10) || 0;
+	  var loanMonths = parseInt(document.getElementById('loanPaymentCalculator_loanMonths').value, 10) || 0;
+	  var loanDays = parseInt(document.getElementById('loanPaymentCalculator_loanDays').value, 10) || 0;
+
+	  if(isNaN(loanAmount)) {
+		alert("Please enter valid numbers in all fields.");
+		return;
+	  }
+	  if(isNaN(annualInterestRate)){
+		annualInterestRate=0;
+	  }
+
+	  var totalLoanDays = (loanYears * 365) + (loanMonths * 30) + loanDays;
+	  var monthlyInterestRate = (annualInterestRate / 100) / 12;
+	  var numberOfPayments = totalLoanDays / 30; // Approximation to monthly payments
+	  var monthlyPayment = loanAmount * monthlyInterestRate / (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
+	  var totalPayment = monthlyPayment * numberOfPayments;
+	  var totalInterest = totalPayment - loanAmount;
+	  
+	  document.getElementById('result_loanPaymentCalculator_interestRate').innerText = annualInterestRate.toFixed(2);
+	  
+	  document.getElementById('loanPaymentCalculator_totalLoanAmount').innerText = loanAmount.toFixed(2);
+	  document.getElementById('loanPaymentCalculator_monthlyPayment').innerText = monthlyPayment.toFixed(2);
+	  document.getElementById('loanPaymentCalculator_totalPayment').innerText = totalPayment.toFixed(2);
+	  document.getElementById('loanPaymentCalculator_totalInterest').innerText = totalInterest.toFixed(2);
+	}
+	function resetLoanPayment() {
+	
+	  document.getElementById('loanPaymentCalculator_purchaseAmount').value = '';
+	  document.getElementById('loanPaymentCalculator_downPaymentPercentage').value = '';
+
+	  document.getElementById('loanPaymentCalculator_loanAmount').value = '';
+	  document.getElementById('loanPaymentCalculator_annualInterestRate').value = '';
+	  document.getElementById('loanPaymentCalculator_loanYears').value = '';
+	  document.getElementById('loanPaymentCalculator_loanMonths').value = '';
+	  document.getElementById('loanPaymentCalculator_loanDays').value = '';
+
+	  document.getElementById('result_loanPaymentCalculator_purchaseAmount').innerText = '';
+	  document.getElementById('result_loanPaymentCalculator_downPayment').innerText = '';
+	  document.getElementById('result_loanPaymentCalculator_interestRate').innerText = '';
+
+	  document.getElementById('loanPaymentCalculator_totalLoanAmount').innerText = '';
+	  document.getElementById('loanPaymentCalculator_monthlyPayment').innerText = '';
+	  document.getElementById('loanPaymentCalculator_totalPayment').innerText = '';
+	  document.getElementById('loanPaymentCalculator_totalInterest').innerText = '';
+	}
+
+	</script>
+
+	<div class="container">
+	  <div class="container-fluid">
+		<div class="row">
+		<h3>Loan Payment Calculator</h3>
+		<div class="col-12 col-md-7 border mr-1">
+		  <div class="mb-3">
+			<label for="purchaseAmount" class="form-label">Purchase Amount ($):</label>
+			<input type="number" class="form-control" id="loanPaymentCalculator_purchaseAmount" placeholder="Enter purchase amount">
+		  </div>
+
+		  <div class="mb-3">
+			<label for="downPaymentPercentage" class="form-label">Down Payment (%):</label>
+			<div class="input-group mb-3">
+				<input type="number" class="form-control" id="loanPaymentCalculator_downPaymentPercentage" placeholder="Enter down payment percentage"
+					aria-label="downPaymentPercentageCalc" aria-describedby="button-addon2" value="20">
+				<button class="btn btn-secondary" type="button" id="button-addon2" onclick="calculateLoanAmount('loanPaymentCalculator_purchaseAmount', 
+					'loanPaymentCalculator_downPaymentPercentage', 'loanPaymentCalculator_loanAmount', 'result_loanPaymentCalculator_purchaseAmount', 
+					'result_loanPaymentCalculator_downPayment')">Apply</button>
+			</div>			
+		  </div>
+		  
+
+		  <div class="mb-3">
+			<label for="loanAmount" class="form-label requiredFieldLabel">Loan Amount ($):<span class="text-danger fw-bold">*</span></label>
+			<input type="number" class="form-control" id="loanPaymentCalculator_loanAmount" placeholder="Enter loan amount">
+		  </div>
+
+		  <div class="mb-3">
+			<label for="annualInterestRate" class="form-label">Annual Interest Rate (%):<span class="text-danger fw-bold">*</span></label>
+			<input type="number" class="form-control" id="loanPaymentCalculator_annualInterestRate" placeholder="Enter interest rate" value="7.0">
+		  </div>
+
+		<div class="mb-3">
+		  <label class="form-label">Loan Term:<span class="text-danger fw-bold">*</span></label>
+		  <div class="row">
+			<div class="col">
+			  <label for="loanPaymentCalculator_loanYears" class="form-label">Years:</label>
+			  <input type="number" class="form-control" id="loanPaymentCalculator_loanYears" placeholder="Years" value="30">
+			</div>
+			<div class="col">
+			  <label for="loanPaymentCalculator_loanMonths" class="form-label">Months:</label>
+			  <input type="number" class="form-control" id="loanPaymentCalculator_loanMonths" placeholder="Months">
+			</div>
+			<div class="col">
+			  <label for="loanPaymentCalculator_loanDays" class="form-label">Days:</label>
+			  <input type="number" class="form-control" id="loanPaymentCalculator_loanDays" placeholder="Days">
+			</div>
+		  </div>
+		</div>
+		
+		<div class="mx-0 my-3">			  	  
+		<button onclick="calculateLoanPayment()" class="btn btn-primary mr-3">Calculate</button>
+		<button onclick="resetLoanPayment()" class="btn btn-secondary mx-2">Reset All</button>
+		</div>
+		</div>
+		  <div class="border col-12 col-md-5 ml-0">		
+			<table class="table m-1">
+				<tr>
+					<th>Result</th>
+				</tr>
+				<tr>
+					<td>Purchase Amount : <span id="result_loanPaymentCalculator_purchaseAmount"></td>
+				</tr>
+				<tr>
+					<td>Down Payment : <span id="result_loanPaymentCalculator_downPayment"></span></td>
+				</tr>
+				<tr>
+					<td>Interest Rate : <span id="result_loanPaymentCalculator_interestRate"></span></td>
+				</tr>
+				<tr>
+					<td>Loan Amount : <span id="loanPaymentCalculator_totalLoanAmount"></span></td>
+				</tr>
+				<tr>
+					<td><strong>Monthly Payment : <span id="loanPaymentCalculator_monthlyPayment"></span></strong></td>
+				</tr>
+				<tr>
+					<td>Total Interest : <span id="loanPaymentCalculator_totalInterest"></span></td>
+				</tr>
+				<tr>
+					<td>Total Payment : <span id="loanPaymentCalculator_totalPayment"></span></td>
+				</tr>
+			</table>
+		  </div>
+		</div>
+	  </div>
+	</div>   
+  </div>
+  <!-- End loanPaymentCalculator -->
+
+  <!-- Start loanTermCalculator -->
+  <div id="loanTermCalculator" class="tabcontent mt-3" style="display:none;">
+	<script>
+	function calculateLoanTerm() {
+	  var loanAmount = parseFloat(document.getElementById('loanTermCalculator_loanAmount').value);
+	  var annualInterestRate = parseFloat(document.getElementById('loanTermCalculator_annualInterestRate').value);
+	  var monthlyPayment = parseFloat(document.getElementById('loanTermCalculator_monthlyPayment').value);
+
+	  if(isNaN(loanAmount) || isNaN(annualInterestRate) || isNaN(monthlyPayment) || annualInterestRate <= 0 || monthlyPayment <= 0) {
+		alert("Please enter valid numbers in all fields and ensure none are 0.");
+		return;
+	  }
+
+	  var monthlyInterestRate = (annualInterestRate / 100) / 12;
+	  
+	  // Calculate loan term in months
+	  var loanTermMonths = Math.log(monthlyPayment / (monthlyPayment - loanAmount * monthlyInterestRate)) / Math.log(1 + monthlyInterestRate);
+	  
+	  if(loanTermMonths < 0 || !isFinite(loanTermMonths)) {
+		alert("Given payment is too low to cover the interest.");
+		return;
+	  }
+
+	  var loanYears = Math.floor(loanTermMonths / 12);
+	  var loanMonths = Math.floor(loanTermMonths % 12);
+	  var loanDays = Math.round((loanTermMonths - loanYears * 12 - loanMonths) * 30); // Approximation
+
+
+	  document.getElementById('loanTermCalculator_totalLoanAmount').innerText = loanAmount.toFixed(2);
+	  document.getElementById('loanTermCalculator_loanYears').innerText = loanYears + " years ";
+	  document.getElementById('loanTermCalculator_loanMonths').innerText = loanMonths + " months ";
+	  document.getElementById('loanTermCalculator_loanDays').innerText = loanDays + " days ";
+	}
+
+	function resetLoanTerm() {
+	  document.getElementById('loanTermCalculator_purchaseAmount').value = '';
+	  document.getElementById('loanTermCalculator_downPaymentPercentage').value = '';
+	  
+	  document.getElementById('loanTermCalculator_loanAmount').value = '';
+	  document.getElementById('loanTermCalculator_annualInterestRate').value = '';
+	  document.getElementById('loanTermCalculator_monthlyPayment').value = '';
+
+	  document.getElementById('loanTermCalculator_totalLoanAmount').innerText = '';
+	  document.getElementById('loanTermCalculator_loanYears').innerText = '';
+	  document.getElementById('loanTermCalculator_loanMonths').innerText = '';
+	  document.getElementById('loanTermCalculator_loanDays').innerText = '';
+	}
+	</script>
+
+	<div class="container">
+	  <div class="container-fluid">
+		<div class="row">
+		  <h3>Loan Term Calculator</h3>
+		  <div class="col-12 col-md-7 border mr-1">
+		  <div class="mb-3">
+			<label for="purchaseAmount" class="form-label">Purchase Amount ($):</label>
+			<input type="number" class="form-control" id="loanTermCalculator_purchaseAmount" placeholder="Enter purchase amount">
+		  </div>
+
+		  <div class="mb-3">
+			<label for="downPaymentPercentage" class="form-label">Down Payment (%):</label>
+			<div class="input-group mb-3">
+				<input type="number" class="form-control" id="loanTermCalculator_downPaymentPercentage" placeholder="Enter down payment percentage"
+					aria-label="downPaymentPercentageCalc" aria-describedby="loanTermCalculator_button-addon2">
+				<button class="btn btn-secondary" type="button" id="loanTermCalculator_button-addon2" onclick="calculateLoanAmount('loanTermCalculator_purchaseAmount', 
+					'loanTermCalculator_downPaymentPercentage', 'loanTermCalculator_loanAmount')">Apply</button>
+			</div>			
+		  </div>
+
+
+		  <div class="mb-3">
+			<label for="loanAmount" class="form-label">Loan Amount ($):<span class="text-danger fw-bold">*</span></label>
+			<input type="number" class="form-control" id="loanTermCalculator_loanAmount" placeholder="Enter loan amount">
+		  </div>
+
+		  <div class="mb-3">
+			<label for="annualInterestRate" class="form-label">Annual Interest Rate (%):<span class="text-danger fw-bold">*</span></label>
+			<input type="number" class="form-control" id="loanTermCalculator_annualInterestRate" placeholder="Enter interest rate">
+		  </div>
+
+		  <div class="mb-3">
+			<label for="monthlyPayment" class="form-label">Desired Monthly Payment ($):<span class="text-danger fw-bold">*</span></label>
+			<input type="number" class="form-control" id="loanTermCalculator_monthlyPayment" placeholder="Enter monthly payment amount">
+		  </div>
+		  <div class="mx-0 my-3">			  
+			<button onclick="calculateLoanTerm()" class="btn btn-primary mr-3">Calculate</button>
+			<button onclick="resetLoanTerm()" class="btn btn-secondary mx-2">Reset</button>
+		  </div>
+		  </div>
+		
+			<div class="border col-12 col-md-5 ml-1">
+			<div class="m-1">
+			  <h4>Result</h4>
+				<p class="m-0 p-0">Loan Amount: <span id="loanTermCalculator_totalLoanAmount"></span></p>		  						  
+				<p class="m-0 p-0">Loan Term: <span id="loanTermCalculator_loanYears"></span><span id="loanTermCalculator_loanMonths"></span><span id="loanTermCalculator_loanDays"></span></p>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	</div>	
+  </div>
+  <!-- End loanTermCalculator -->
+
+  <!-- Start simpleInterestCalculator -->	
+  <div id="simpleInterestCalculator" class="tabcontent mt-3" style="display:none;">
+	<script>	
+		function calculateSimpleInterestLoanPayment() {
+		  var loanAmount = parseFloat(document.getElementById('simpleInterestCalculator_loanAmount').value);
+		  var annualInterestRate = parseFloat(document.getElementById('simpleInterestCalculator_annualInterestRate').value);
+		  var loanYears = parseInt(document.getElementById('simpleInterestCalculator_loanYears').value, 10) || 0;
+		  var loanMonths = parseInt(document.getElementById('simpleInterestCalculator_loanMonths').value, 10) || 0;
+		  var loanDays = parseInt(document.getElementById('simpleInterestCalculator_loanDays').value, 10) || 0;
+
+		  if(isNaN(loanAmount) || isNaN(annualInterestRate)) {
+			alert("Please enter valid numbers for loan amount and interest rate.");
+			return;
+		  }
+
+		  // Calculate the total loan term in years
+		  var totalLoanYears = loanYears + (loanMonths / 12) + (loanDays / 365);
+
+		  // Calculate total interest
+		  var totalInterest = (loanAmount * (annualInterestRate / 100)) * totalLoanYears;
+		  
+		  // Calculate total payment (Principal + Interest)
+		  var totalPayment = loanAmount + totalInterest;
+
+		  // Display results
+		  document.getElementById('simpleInterestCalculator_totalLoanAmount').innerText = loanAmount.toFixed(2);
+		  document.getElementById('simpleInterestCalculator_totalPayment').innerText = totalPayment.toFixed(2);
+		  document.getElementById('simpleInterestCalculator_totalInterest').innerText = totalInterest.toFixed(2);
+		}
+
+		function resetSimpleInterestLoanPayment() {
+		  // Reset all fields and results
+		  document.getElementById('simpleInterestCalculator_purchaseAmount').value = '';
+		  document.getElementById('simpleInterestCalculator_downPaymentPercentage').value = '';
+		  
+		  document.getElementById('simpleInterestCalculator_loanAmount').value = '';
+		  document.getElementById('simpleInterestCalculator_annualInterestRate').value = '';
+		  document.getElementById('simpleInterestCalculator_loanYears').value = '';
+		  document.getElementById('simpleInterestCalculator_loanMonths').value = '';
+		  document.getElementById('simpleInterestCalculator_loanDays').value = '';
+		  
+		  document.getElementById('simpleInterestCalculator_totalLoanAmount').innerText = '';
+		  document.getElementById('simpleInterestCalculator_totalPayment').innerText = '';
+		  document.getElementById('simpleInterestCalculator_totalInterest').innerText = '';		  
+		}
+	</script>
+
+	<div class="container">
+	  <div class="container-fluid">
+		<div class="row">
+		  <h3>Simple Interest Calculator</h3>
+		
+		 <div class="col-12 col-md-7 border mr-1">
+		  <div class="mb-3">
+			<label for="purchaseAmount" class="form-label">Purchase Amount ($):</label>
+			<input type="number" class="form-control" id="simpleInterestCalculator_purchaseAmount" placeholder="Enter purchase amount">
+		  </div>
+
+		  <div class="mb-3">
+			<label for="downPaymentPercentage" class="form-label">Down Payment (%):</label>
+			<div class="input-group mb-3">
+				<input type="number" class="form-control" id="simpleInterestCalculator_downPaymentPercentage" placeholder="Enter down payment percentage"
+					aria-label="downPaymentPercentageCalc" aria-describedby="simpleInterestCalculator_button-addon2">
+				<button class="btn btn-secondary" type="button" id="simpleInterestCalculator_button-addon2" onclick="calculateLoanAmount('simpleInterestCalculator_purchaseAmount', 
+					'simpleInterestCalculator_downPaymentPercentage', 'simpleInterestCalculator_loanAmount')">Apply</button>
+			</div>			
+		  </div>
+
+		  <div class="mb-3">
+			<label for="simpleInterestCalculator_loanAmount" class="form-label">Loan Amount ($):<span class="text-danger fw-bold">*</span></label>
+			<input type="number" class="form-control" id="simpleInterestCalculator_loanAmount" placeholder="Enter loan amount">
+		  </div>		 
+
+		  <div class="mb-3">
+			<label for="simpleInterestCalculator_annualInterestRate" class="form-label">Annual Interest Rate (%):<span class="text-danger fw-bold">*</span></label>
+			<input type="number" class="form-control" id="simpleInterestCalculator_annualInterestRate" placeholder="Enter interest rate">
+		  </div>
+		  			
+		<div class="mb-3">
+		  <label class="form-label">Loan Term:<span class="text-danger fw-bold">*</span></label>
+		  <div class="row">
+			<div class="col">
+			  <label for="simpleInterestCalculator_loanYears" class="form-label">Years:</label>
+			  <input type="number" class="form-control" id="simpleInterestCalculator_loanYears" placeholder="Years">
+			</div>
+			<div class="col">
+			  <label for="simpleInterestCalculator_loanMonths" class="form-label">Months:</label>
+			  <input type="number" class="form-control" id="simpleInterestCalculator_loanMonths" placeholder="Months">
+			</div>
+			<div class="col">
+			  <label for="simpleInterestCalculator_loanDays" class="form-label">Days:</label>
+			  <input type="number" class="form-control" id="simpleInterestCalculator_loanDays" placeholder="Days">
+			</div>
+		  </div>
+		</div>
+		<div class="mx-0 my-3">			  
+		  <button onclick="calculateSimpleInterestLoanPayment()" class="btn btn-primary mr-3">Calculate</button>  
+		  <button onclick="resetSimpleInterestLoanPayment()" class="btn btn-secondary mx-2">Reset All</button>
+		</div>
+		</div>
+	
+		  <div class="border col-12 col-md-5 ml-1">
+			<div class="m-1">
+				<h4>Result</h4>
+				<p class="m-0 p-0 font-weight-bold">Loan Amount: <span id="simpleInterestCalculator_totalLoanAmount"></span></p>		  				
+				<p class="m-0 p-0 font-weight-bold">Total Interest: <span id="simpleInterestCalculator_totalInterest"></span></p>		  
+				<p class="m-0 p-0 font-weight-bold">Total Payment:  <span id="simpleInterestCalculator_totalPayment"></span></p>
+			</div>
+		  </div>		  
+		</div>
+	  </div>
+	</div>   
+  
+  </div>
+  <!-- End SimpleInterestCalculator -->
+
+  <div id="investmentCalculator" class="tabcontent mt-3" style="display:none;">
+    <h3>Investment Calculator</h3>
+    <!-- Calculator content here -->
+  </div>
+</div>
+
+<script>
+function openCalculator(evt, calculatorName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.querySelectorAll(".nav-link");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].classList.remove("active");
+  }
+  document.getElementById(calculatorName).style.display = "block";
+  evt.currentTarget.classList.add("active");
+}
+</script>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dual Loan Calculators</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+
+
+<script>
+function calculateLoanTerm() {
+  var loanAmount = parseFloat(document.getElementById('loanTermCalculator_loanAmount').value);
+  var annualInterestRate = parseFloat(document.getElementById('loanTermCalculator_annualInterestRate').value);
+  var monthlyPayment = parseFloat(document.getElementById('loanTermCalculator_monthlyPayment').value);
+
+  if(isNaN(loanAmount) || isNaN(annualInterestRate) || isNaN(monthlyPayment) || annualInterestRate <= 0 || monthlyPayment <= 0) {
+    alert("Please enter valid numbers in all fields and ensure none are 0.");
+    return;
+  }
+
+  var monthlyInterestRate = (annualInterestRate / 100) / 12;
+  
+  // Calculate loan term in months
+  var loanTermMonths = Math.log(monthlyPayment / (monthlyPayment - loanAmount * monthlyInterestRate)) / Math.log(1 + monthlyInterestRate);
+  
+  if(loanTermMonths < 0 || !isFinite(loanTermMonths)) {
+    alert("Given payment is too low to cover the interest.");
+    return;
+  }
+
+  var loanYears = Math.floor(loanTermMonths / 12);
+  var loanMonths = Math.floor(loanTermMonths % 12);
+  var loanDays = Math.round((loanTermMonths - loanYears * 12 - loanMonths) * 30); // Approximation
+
+  document.getElementById('loanTermCalculator_loanYears').innerText = loanYears + " years ";
+  document.getElementById('loanTermCalculator_loanMonths').innerText = loanMonths + " months ";
+  document.getElementById('loanTermCalculator_loanDays').innerText = loanDays + " days ";
+}
+
+function resetLoanTerm() {
+  document.getElementById('loanTermCalculator_loanAmount').value = '';
+  document.getElementById('loanTermCalculator_annualInterestRate').value = '';
+  document.getElementById('loanTermCalculator_monthlyPayment').value = '';
+  document.getElementById('loanTermCalculator_loanYears').innerText = '';
+  document.getElementById('loanTermCalculator_loanMonths').innerText = '';
+  document.getElementById('loanTermCalculator_loanDays').innerText = '';
+}
+
+</script>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col">
+      <h3>Loan Term Calculator</h3>
+
+      <div class="mb-3">
+        <label for="loanAmount" class="form-label">Loan Amount ($):</label>
+        <input type="number" class="form-control" id="loanTermCalculator_loanAmount" placeholder="Enter loan amount">
+      </div>
+
+      <div class="mb-3">
+        <label for="annualInterestRate" class="form-label">Annual Interest Rate (%):</label>
+        <input type="number" class="form-control" id="loanTermCalculator_annualInterestRate" placeholder="Enter interest rate">
+      </div>
+
+      <div class="mb-3">
+        <label for="monthlyPayment" class="form-label">Desired Monthly Payment ($):</label>
+        <input type="number" class="form-control" id="loanTermCalculator_monthlyPayment" placeholder="Enter monthly payment amount">
+      </div>
+      
+      <button onclick="calculateLoanTerm()" class="btn btn-primary mx-3">Calculate</button>
+      <button onclick="resetLoanTerm()" class="btn btn-secondary mx-3">Reset</button>
+
+      <div class="my-3 border">
+        <div class="m-1">
+          <h4>Result</h4>
+          <p class="m-0 p-0">Loan Term: <span id="loanTermCalculator_loanYears"></span><span id="loanTermCalculator_loanMonths"></span><span id="loanTermCalculator_loanDays"></span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

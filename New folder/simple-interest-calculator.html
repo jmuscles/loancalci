@@ -1,0 +1,111 @@
+  <!-- Start SimpleInterestCalculator -->	  
+	<script>	
+		function calculateLoanAmount(loanAmountInputId) {
+			var purchaseAmount = parseFloat(document.getElementById('purchaseAmount').value);
+			var downPaymentPercentage = parseFloat(document.getElementById('downPaymentPercentage').value);
+
+			if (isNaN(purchaseAmount) || isNaN(downPaymentPercentage)) {
+			  alert("Please enter valid numbers for purchase amount and down payment percentage.");
+			  return;
+			}
+
+			var downPaymentAmount = (downPaymentPercentage / 100) * purchaseAmount;
+			var loanAmount = purchaseAmount - downPaymentAmount;
+
+			document.getElementById(loanAmountInputId).value = loanAmount.toFixed(2);
+		}
+	
+		function calculateSimpleInterestLoanPayment() {
+		  var loanAmount = parseFloat(document.getElementById('simpleInterestCalculator_loanAmount').value);
+		  var annualInterestRate = parseFloat(document.getElementById('simpleInterestCalculator_annualInterestRate').value);
+		  var loanYears = parseInt(document.getElementById('simpleInterestCalculator_loanYears').value, 10) || 0;
+		  var loanMonths = parseInt(document.getElementById('simpleInterestCalculator_loanMonths').value, 10) || 0;
+		  var loanDays = parseInt(document.getElementById('simpleInterestCalculator_loanDays').value, 10) || 0;
+
+		  if(isNaN(loanAmount) || isNaN(annualInterestRate)) {
+			alert("Please enter valid numbers for loan amount and interest rate.");
+			return;
+		  }
+
+		  // Calculate the total loan term in years
+		  var totalLoanYears = loanYears + (loanMonths / 12) + (loanDays / 365);
+
+		  // Calculate total interest
+		  var totalInterest = (loanAmount * (annualInterestRate / 100)) * totalLoanYears;
+		  
+		  // Calculate total payment (Principal + Interest)
+		  var totalPayment = loanAmount + totalInterest;
+
+		  // Display results
+		  
+		  document.getElementById('simpleInterestCalculator_totalLoanAmount').innerText = loanAmount;
+		  document.getElementById('simpleInterestCalculator_totalPayment').innerText = totalPayment.toFixed(2);
+		  document.getElementById('simpleInterestCalculator_totalInterest').innerText = totalInterest.toFixed(2);
+		}
+
+		function resetSimpleInterestLoanPayment() {
+		  // Reset all fields and results
+		  document.getElementById('simpleInterestCalculator_loanAmount').value = '';
+		  document.getElementById('simpleInterestCalculator_annualInterestRate').value = '';
+		  document.getElementById('simpleInterestCalculator_loanYears').value = '';
+		  document.getElementById('simpleInterestCalculator_loanMonths').value = '';
+		  document.getElementById('simpleInterestCalculator_loanDays').value = '';
+		  document.getElementById('simpleInterestCalculator_totalLoanAmount').innerText = '0';
+		  document.getElementById('simpleInterestCalculator_totalPayment').innerText = '0';
+		  document.getElementById('simpleInterestCalculator_totalInterest').innerText = '0';
+		}
+	</script>
+
+	<div class="container">
+	  <div class="row justify-content-center">
+		<div class="col">
+		  <h3>Simple Interest Calculator</h3>
+
+		  <div class="mb-3">
+			<label for="purchaseAmount" class="form-label">Purchase Amount ($):</label>
+			<input type="number" class="form-control" id="purchaseAmount" placeholder="Enter purchase amount">
+		  </div>
+
+		  <div class="mb-3">
+			<label for="downPaymentPercentage" class="form-label">% Down Payment:</label>
+			<input type="number" class="form-control" id="downPaymentPercentage" placeholder="Enter down payment percentage">
+		  </div>
+
+		  <button onclick="calculateLoanAmount('simpleInterestCalculator_loanAmount')" class="btn btn-info mb-3">Calculate Loan Amount</button>
+
+		  <div class="mb-3">
+			<label for="simpleInterestCalculator_loanAmount" class="form-label">Loan Amount ($):</label>
+			<input type="number" class="form-control" id="simpleInterestCalculator_loanAmount" placeholder="Enter loan amount" value="10000">
+		  </div>
+
+		  <div class="mb-3">
+			<label for="simpleInterestCalculator_annualInterestRate" class="form-label">Annual Interest Rate (%):</label>
+			<input type="number" class="form-control" id="simpleInterestCalculator_annualInterestRate" placeholder="Enter interest rate" value="5">
+		  </div>
+
+		  <div class="mb-3">
+			<label class="form-label">Loan Term:</label>
+			<div class="input-group">
+			  <input type="number" class="form-control" id="simpleInterestCalculator_loanYears" placeholder="Years" value="30">
+			  <span class="input-group-text">Years</span>
+			  <input type="number" class="form-control" id="simpleInterestCalculator_loanMonths" placeholder="Months" value="0">
+			  <span class="input-group-text">Months</span>
+			  <input type="number" class="form-control" id="simpleInterestCalculator_loanDays" placeholder="Days" value="0">
+			  <span class="input-group-text">Days</span>
+			</div>
+		  </div>
+		  
+		  <button onclick="calculateSimpleInterestLoanPayment()" class="btn btn-primary mb-3">Calculate</button>
+
+		  <div class="results">
+			<p>Loan Amount: <span id="simpleInterestCalculator_totalLoanAmount">0</span></p>		  		  
+			<p>Total Interest: <span id="simpleInterestCalculator_totalInterest">0</span></p>		  
+			<p>Total Payment: <span id="simpleInterestCalculator_totalPayment">0</span></p>
+		  </div>
+
+		  <button onclick="resetSimpleInterestLoanPayment()" class="btn btn-secondary">Reset All</button>
+		</div>
+	  </div>
+	</div>   
+  
+  <!-- End SimpleInterestCalculator -->
